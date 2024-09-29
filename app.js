@@ -14,6 +14,23 @@ const PORT = process.env.PORT || 3000
 const path = require('path')
 app.use(express.static(path.join(__dirname, 'public')))
 
+// Establecer motor de plantillas
+app.set('view engine', 'ejs')
+
+// Invocamos a bcryptjs
+const bcryptjs = require('bcryptjs')
+
+// Var de session
+const session = require('express-session')
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}))
+
+// Invocamos al módulo de conexión a la DB
+const connection = require('./database/db')
+
 app.get('/', (req, res) => {
     res.send('HOLA')
 })
