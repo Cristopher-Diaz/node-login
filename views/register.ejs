@@ -9,9 +9,18 @@
 <body>
     <div class="register-form">
         <h2>Form para registrar usuario</h2>
-        <form action="register" method="post">
-            <label for="user"> User name</label>
-            <input type="text" class="login-input" name="user" placeholder="User" required>
+        <form action="/register" method="post">
+            <label for="user">User name</label>
+            <input type="text" class="login-input" name="user" placeholder="User name" required>
+
+            <label for="name">Full name</label>
+            <input type="text" class="login-input" name="name" placeholder="Full name" required>
+
+            <label for="role">Role</label>
+            <select name="role" id="role" class="select-css">
+                <option value="admin">Admin</option>
+                <option value="seller">Seller</option>
+            </select>
 
             <label for="password">Password</label>
             <input type="password" class="login-input" name="password" placeholder="Password" required>
@@ -22,5 +31,22 @@
         </form>
 
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <% if (typeof alert != 'undefined') { %>
+        <script>
+            Swal.fire({
+                title: '<%= alertTitle %>',
+                text: '<%= alertMsg %>',
+                icon: '<%= alertIcon %>',
+                showConfirmButton: '<%= showConfirmButton %>',
+                timer: '<%= time %>'
+            }).then(() => {
+                window.location = '/<%= ruta %>'
+            })
+        </script>
+    <% } %>
+    
 </body>
 </html>

@@ -30,6 +30,7 @@ app.use(session({
 
 // Invocamos al módulo de conexión a la DB
 const connection = require('./database/db')
+const { error } = require('console')
 
 app.get('/', (req, res) => {
     res.render('index', {msg: 'Mensaje desde el servidor'})
@@ -41,6 +42,27 @@ app.get('/login', (req, res) => {
 
 app.get('/register', (req, res) => {
     res.render('register')
+})
+
+app.post('/register', async (req, res) => {
+    const { user, name, role, password } = req.body
+
+    let passwordHash = await bcryptjs.hash(password, 8)
+    connection.query('INSERT INTO users SET ?', {user_name: user, full_name: name, role, pass: passwordHash}, async(error, results) => {
+        if (error) {
+            console.error(error)
+        } else {
+            res.render('register', {
+                alert: true,
+                alertTitle: 'Registro de usuario',
+                alertMsg: '¡Regristo creado con exito!',
+                alertIcon: 'success',
+                showConfirmButton: false,
+                time: 2500,
+                ruta: ''
+            })
+        }
+    })
 })
 
 app.listen(PORT, (req, res) => {
