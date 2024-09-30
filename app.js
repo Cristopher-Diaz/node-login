@@ -32,7 +32,15 @@ app.use(session({
 const connection = require('./database/db')
 
 app.get('/', (req, res) => {
-    res.send('HOLA')
+    res.render('index', {msg: 'Mensaje desde el servidor'})
+})
+
+app.get('/login', (req, res) => {
+    res.render('login')
+})
+
+app.get('/register', (req, res) => {
+    res.render('register')
 })
 
 app.listen(PORT, (req, res) => {
