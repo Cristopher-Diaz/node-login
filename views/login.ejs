@@ -1,1 +1,23 @@
-<!-- login -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="login-form">
+        <h2>Login con Node JS</h2>
+        <form action="auth" method="post">
+            <input type="text" class="login-input" name="user" placeholder="User" required>
+            <input type="password" class="login-input" name="password" placeholder="Password" required>
+            <button type="submit" class="btn-login">Log In</button>
+            <!-- <input type="submit" class="btn-login" value="Log In"> -->
+
+        </form>
+
+        <a href="/register" class="btn-register">Registrarse</a>
+    </div>
+</body>
+</html>
