@@ -30,11 +30,10 @@ app.use(session({
 
 // Invocamos al módulo de conexión a la DB
 const connection = require('./database/db')
-const { error } = require('console')
 
-app.get('/', (req, res) => {
-    res.render('index', {msg: 'Mensaje desde el servidor'})
-})
+// app.get('/', (req, res) => {
+//     res.render('index', {msg: 'Mensaje desde el servidor'})
+// })
 
 app.get('/login', (req, res) => {
     res.render('login')
@@ -63,6 +62,70 @@ app.post('/register', async (req, res) => {
             })
         }
     })
+})
+
+app.post('/auth', async(req, res) => {
+    const { user, password } = req.body
+    if (user && password) {
+        let passwordHash = await bcryptjs.hash(password, 8)
+        connection.query('SELECT * FROM users WHERE user_name = ?', [user], async(error, results) => {
+            // console.log(results)
+            // console.log(!(await bcryptjs.compare(passwordHash, results[0].pass)))
+            if (results.length === 0 || !(await bcryptjs.compare(password, results[0].pass))) {
+                res.render('login', {
+                    alert: true,
+                    alertTitle: 'Error',
+                    alertMsg: '¡Credenciales incorrectas!',
+                    alertIcon: 'error',
+                    showConfirmButton: false,
+                    time: 2500,
+                    ruta: 'login'
+                })
+            } else {
+                req.session.loggedIn = true
+                req.session.full_name = results[0].full_name
+                res.render('login', {
+                    alert: true,
+                    alertTitle: 'Conexión exitosa',
+                    alertMsg: '¡Login correcto!',
+                    alertIcon: 'success',
+                    showConfirmButton: false,
+                    time: 2500,
+                    ruta: ''
+                })
+            }
+        })
+    } else {
+        res.render('login', {
+            alert: true,
+            alertTitle: 'Error',
+            alertMsg: '¡Los campos no pueden estar vacios!',
+            alertIcon: 'error',
+            showConfirmButton: false,
+            time: 2500,
+            ruta: 'login'
+        })
+    }
+})
+
+app.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/login')
+    })
+})
+
+app.get('/', (req, res) => {
+    if (req.session.loggedIn) {
+        res.render('index', {
+            login: true,
+            full_name: req.session.full_name
+        })
+    } else {
+        res.render('index', {
+            login: false,
+            full_name: 'Debe iniciar sesión'
+        })
+    }
 })
 
 app.listen(PORT, (req, res) => {
